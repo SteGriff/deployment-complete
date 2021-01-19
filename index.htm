@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>DeploymentComplete</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="tachyons.css">
+<style>
+.teams {
+  font-family: "Segoe UI", system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  font-size: 14px;
+}
+</style>
+</head>
+<body class="sans-serif">
+  <main id="app" class="ph2">
+    
+    <h2 class="black-50">"Deployment Complete"</h2>
+    <p>This micro-app formats deployment notifications, to paste into Teams messages.</p>
+	
+	<table>
+	<tr>
+		<th class="tr pa1">
+			<label for="appName" class="f6 b db">App Name:</label>
+		</th>
+		<td class="w6 pa1">
+			<input name="appName" v-model="appName" placeholder="App name" class="input-reset ba b--black-20 pa2 db w5">
+		</td>
+	</tr>
+	<tr>
+		<th class="tr pa1">
+			<label for="releaseNum" class="f6 b db">Release Number:</label>
+		</th>
+		<td class="w6 pa1">
+			<input name="releaseNum" v-model="releaseNum" placeholder="123" class="input-reset ba b--black-20 pa2 db w5">
+		</td>
+	</tr>
+	<tr>
+		<th class="tr pa1">
+			<label for="link" class="f6 b db">Link:</label>
+		</th>
+		<td class="w6 pa1">
+			<input name="link" v-model="link" placeholder="https://..." class="input-reset ba b--black-20 pa2 db w5">
+		</td>
+	</tr>
+	<tr>
+		<th class="tr pa1">
+			<label for="emoji" class="f6 b db">Emoji:</label>
+		</th>
+		<td class="w6 pa1">
+			<select name="emoji" v-model="emoji" class="ba b--black-20 pa2 db">
+				<option v-for="emo in emojis">{{emo}}</option>
+			</select>
+		</td>
+	</tr>
+	</table>
+	
+    <h2 class="black-50">Output</h2>
+    <p>Copy the content between the lines:
+	<!-- <button class="b ph3 pv2 input-reset ba b--black bg-transparent pointer f6" @click="copy()">Copy to Clipboard</button></p> -->
+    <hr>
+    <div class="teams js-output">
+    <div><p>{{appName}} release finished! {{emoji}}</p></div>
+    <div><p>&nbsp;</p></div>
+    <table width="100%">
+      <tr>
+        <td>{{releaseNum}}</td>
+        <td>
+          <a :href="link">Deployment: {{releaseNum}}, {{appName}}</a>
+        </td>
+      </tr>
+    </table>
+    </div>
+    <hr>
+    
+  </main>
+  <script src="vue.js"></script>
+  <script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+    appName: '',
+    releaseNum: null,
+    link: '',
+    emoji: '🚀',
+    emojis: ['🐣', '🚀', '🌴', '🥳', '🎉', '🎆', '🤸‍♂️', '💯']
+    },
+	methods : {
+		copy() {
+			const content = document.getElementsByClassName('js-output')[0].innerHTML;
+			//const blob = new Blob(
+			console.log("COPY!", content);
+			navigator.clipboard.write([new ClipboardItem({ 'text/plain' : content })]);
+		}
+	}
+  })
+  </script>
+</body>
+</html>
