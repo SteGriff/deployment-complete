@@ -16,7 +16,7 @@
   <main id="app" class="ph2">
     
     <h2 class="black-50">"Deployment Complete"</h2>
-    <p>This micro-app formats deployment notifications, to paste into Teams messages.</p>
+    <p>This micro-app formats a deployment notification, to paste into a Teams message.</p>
 	
 	<table>
 	<tr>
@@ -56,8 +56,8 @@
 	</table>
 	
     <h2 class="black-50">Output</h2>
-    <p>Copy the content between the lines:
-	<!-- <button class="b ph3 pv2 input-reset ba b--black bg-transparent pointer f6" @click="copy()">Copy to Clipboard</button></p> -->
+    <p>Copy the content between the lines <small class="black-50">or try the 'Copy to Clipboard' button (Chrome 86+ and Safari).</small>
+	
     <hr>
     <div class="teams js-output">
     <div><p>{{appName}} release finished! {{emoji}}</p></div>
@@ -72,7 +72,8 @@
     </table>
     </div>
     <hr>
-    
+    <button class="b ph3 pv2 input-reset ba b--black bg-transparent pointer f6" @click="copy()">{{ copyButtonText }}</button></p>
+	
   </main>
   <script src="vue.js"></script>
   <script>
@@ -83,17 +84,28 @@
     releaseNum: null,
     link: '',
     emoji: '🚀',
-    emojis: ['🐣', '🚀', '🌴', '🥳', '🎉', '🎆', '🤸‍♂️', '💯']
+    emojis: ['🐣', '🚀', '🌴', '🥳', '🎉', '🎆', '🤸‍♂️', '💯'],
+	copyFailed : false
     },
+	computed : {
+		copyButtonText() {
+			return this.copyFailed ? "Copy Failed 😢" : "Copy to Clipboard";
+		}
+	},
 	methods : {
 		copy() {
+			vm = this;
+			try {
 			const content = document.getElementsByClassName('js-output')[0].innerHTML;
-			//const blob = new Blob(
-			console.log("COPY!", content);
-			navigator.clipboard.write([new ClipboardItem({ 'text/plain' : content })]);
+			const blobInput = new Blob([content], {type: 'text/html'});
+			const clipboardItemInput = new ClipboardItem({'text/html' : blobInput});
+			navigator.clipboard.write([clipboardItemInput]);
+			} catch(e) {
+				vm.copyFailed = true;
+			}
 		}
 	}
-  })
+  });
   </script>
 </body>
 </html>
